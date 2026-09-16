@@ -68,7 +68,7 @@ class Task(Base):
         nullable=False,
         server_default=func.now(),
     )
-    # onupdateはSQLAlchemy経由のUPDATEに適用する。直接SQLの更新までは保証しない。
+    # onupdateはSQLAlchemy経由のUPDATEに適用
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
