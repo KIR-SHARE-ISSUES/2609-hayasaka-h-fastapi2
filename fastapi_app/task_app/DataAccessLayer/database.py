@@ -75,9 +75,10 @@ class Database:
             expire_on_commit=False,  # commit後も読み込み済みの値を保持する。
         )
 
+    # class に対する再帰的操作なので @classmethod を使用
     @classmethod
     def from_settings(cls, settings: Settings) -> "Database":
-        """設定からEngineとDatabaseを作る。実接続は通常、最初のDB操作時に行う。"""
+        # settingsから接続情報をまとめ、Engineを作ってDatabaseを返す。
         return cls(
             create_engine(
                 settings.database_url,
@@ -90,20 +91,25 @@ class Database:
             )
         )
 
+    """ DB 系で必要な時に使うやつら"""
+
     def create_tables(self) -> None:
         """読み込んだモデルの定義で、不足する表を作る。アプリ起動時には呼ばない。"""
         # 既存の列の変更や、MySQLのDBそのものの作成は行わない。
         Base.metadata.create_all(bind=self.engine)
 
     def open_session(self) -> Session:
-        """新しいSessionを返す。SQL実行などで必要になった時点で接続を借りる。"""
+        """新しいSessionを返す。SQL実行などで必要になった時点で接続させる"""
         # 処理間で使い回さず、利用後は共通関数のwithで閉じる。
         return self.session_factory()
 
     def dispose(self) -> None:
         """アプリ終了時に、返却済みの接続を閉じる。"""
-        # 貸し出し中の接続は対象外なので、Sessionの終了処理も必要になる。
+        # 貸し出し中の接続は対象外なので、Sessionの終了処理も必要！
         self.engine.dispose()
+
+
+""" DB 操作で毎回呼び出す共通関数 commit rollback"""
 
 
 def execute_database_operation(
@@ -117,8 +123,6 @@ def execute_database_operation(
     operationはSessionを受け取り、応答データの準備まで行う関数。
     登録・更新・削除はwrite=True、取得だけなら省略する。
     """
-    # commit中の通信断では結果が不明な場合があるため、自動再試行はしない。
-    # returnや例外でwithを抜けるときもSessionを閉じ、接続を返す。
     with database.open_session() as db:
         try:
             result = operation(db)

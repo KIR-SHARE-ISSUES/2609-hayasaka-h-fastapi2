@@ -42,9 +42,8 @@ class TaskApplication:
             self.api.include_router(controller.router)
 
         # 許可した画面からAPIの応答を読み取れるようにする。
-        # 最外側に置き、想定外の500応答にもCORSヘッダーを付ける。
-        self.asgi = CORSMiddleware(
-            self.api,
+        self.api.add_middleware(
+            CORSMiddleware,
             allow_origins=settings.allowed_origins,
             allow_credentials=False,
             allow_methods=["*"],
@@ -63,12 +62,13 @@ class TaskApplication:
 
 
 def create_app(
-    settings: Settings | None = None,
-    database: Database | None = None,
-) -> CORSMiddleware:
+    settings: Settings | None = None,  # settings あれば使う
+    database: Database | None = None,  # database あれば使う
+) -> FastAPI:
     """設定とDBからアプリを作る。省略された設定は環境変数・.envから読む。"""
     configured = settings if settings is not None else Settings()  # type: ignore[call-arg]
-    return TaskApplication(configured, database).asgi
+    # Settings があればそのままconfig 無ければ Settings() から持ってくる
+    return TaskApplication(configured, database).api
 
 
 # サーバーが読み込む入口。lifespanはサーバーの起動・終了時に実行される。

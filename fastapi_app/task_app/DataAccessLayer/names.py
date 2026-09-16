@@ -16,9 +16,9 @@ NamedModel = TypeVar("NamedModel", Category, Assignee)
 
 
 class NameRepository(Generic[NamedModel]):
-    """名前を持つ2種類の表で、検索順序と重複判定をそろえる。
-
-    Sessionは外から受け取り、保存確定・取り消し・終了はDBの共通関数に任せる。
+    """
+    名前を持つ2種類の表で、検索順序と重複判定をそろえる。
+    保存確定・取り消し・終了はDBの共通関数に任せる。
     """
 
     def __init__(self, db: Session, model: type[NamedModel], entity: str) -> None:

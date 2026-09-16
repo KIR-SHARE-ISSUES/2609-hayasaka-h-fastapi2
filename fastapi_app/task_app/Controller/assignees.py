@@ -44,7 +44,9 @@ class AssigneeController:
         """POST /assignees：登録と応答の検証後、共通関数が保存してSessionを閉じる。"""
 
         def operation(db: Session) -> AssigneeResponse:
+            # payload.name - assigneerepository -record
             record = AssigneeRepository(db).create(payload.name)
+            # DB - record - response で JSON へ変換。
             return AssigneeResponse.model_validate(record)
 
         # 名前重複は409、その他のDB障害は500へ、共通ハンドラーが変換する。
