@@ -21,7 +21,8 @@ CreateType = TypeVar("CreateType", bound=BaseModel)
 ResponseType = TypeVar("ResponseType", bound=BaseModel)
 
 
-# ABC method で子クラスに実装を強制するため、ジェネリック型を使って入力型と応答型を指定する。
+# ABCとabstractmethodで、子クラスにcreateの実装を求める。
+# Genericで、入力型と応答型の対応を表す。
 class NameController(ABC, Generic[CreateType, ResponseType]):
     """一覧取得・登録の共通処理。SQLと保存確定はDALへ任せる。"""
 
