@@ -12,8 +12,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
 
-from .Controller.assignees import AssigneeController
-from .Controller.categories import CategoryController
+from .Controller.name import AssigneeController
+from .Controller.name import CategoryController
 from .Controller.errors import ApiErrorHandlers
 from .Controller.tasks import TaskController
 from .DataAccessLayer.database import Database, Settings
