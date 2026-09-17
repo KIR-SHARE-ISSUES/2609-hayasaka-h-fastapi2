@@ -17,7 +17,7 @@ from ..Model.errors import NotFoundError
 from ..Model.models import Task
 from ..Model.schemas import TaskCreate, TaskResponse, TaskUpdate
 
-# URL内のIDは正の整数に限定する。DBに存在するかは各処理で確認する。
+# URL内のIDは正の整数に限定し、DBに存在するかは各処理で確認する。
 TaskId = Annotated[int, Path(gt=0)]
 
 

@@ -81,7 +81,6 @@ class TaskRepository:
     ) -> Task:
         """更新対象の5項目を明示し、IDや作成日時を上書きしない。"""
         # Sessionが変更を追跡するため、再度addする必要はない。
-        # 同時編集を検出する仕組みはなく、後の更新で上書きされ得る。
         task.title = title
         task.description = description
         task.is_done = is_done
@@ -90,7 +89,7 @@ class TaskRepository:
         return task
 
     def refresh(self, task: Task) -> Task:
-        """変更をSQLで反映し、応答に必要なID・日時・関連を取得する独自メソッド。"""
+        """変更をSQLで反映し、応答に必要なID・日時・関連を取得する独自 method"""
         # flushはSession内の変更全体をDBへ送る。保存確定は後のcommitで行う。
         self.db.flush()
         refreshed = self.get(task.id)
