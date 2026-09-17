@@ -20,7 +20,7 @@ class ApiErrorHandlers:
         app.add_exception_handler(SQLAlchemyError, self.database_error)
         app.add_exception_handler(Exception, self.unexpected_error)
 
-    async def application_error(self, request: Request, exc: Exception) -> JSONResponse:
+    def application_error(self, request: Request, exc: Exception) -> JSONResponse:
         """既知の業務エラーを変換する。DB障害を含むその他のアプリ例外は500。"""
         if isinstance(exc, NotFoundError):
             return JSONResponse(status_code=404, content={"detail": str(exc)})
@@ -28,11 +28,11 @@ class ApiErrorHandlers:
             return JSONResponse(status_code=409, content={"detail": str(exc)})
         return self._failure(request, exc, "Database operation failed")
 
-    async def database_error(self, request: Request, exc: Exception) -> JSONResponse:
+    def database_error(self, request: Request, exc: Exception) -> JSONResponse:
         """Sessionの準備・終了時などに直接伝わったDB例外も、同じ500形式にそろえる。"""
         return self._failure(request, exc, "Database operation failed")
 
-    async def unexpected_error(self, request: Request, exc: Exception) -> JSONResponse:
+    def unexpected_error(self, request: Request, exc: Exception) -> JSONResponse:
         """想定外の例外も成功扱いにせず、原因の種類を記録して500を返す。"""
         return self._failure(request, exc, "Internal server error")
 
