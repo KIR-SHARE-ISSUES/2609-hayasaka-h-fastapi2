@@ -1,4 +1,4 @@
-"""APIで受け取る項目・返す項目を定義する。入力の型・文字数・省略・nullを検証する。
+"""タスクAPIで受け取る項目・返す項目を定義する。入力の型・文字数・省略・nullを検証する。
 
 既存APIとの互換性のためPydanticの型変換と余分な入力項目の無視を維持する。
 型・文字数はここで、IDの実在はControllerで確認する。
@@ -7,58 +7,14 @@
 from datetime import datetime
 from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import Field, field_validator
 
-Name = Annotated[str, Field(min_length=1, max_length=100)]
+from .base import InputModel, OrmResponse
+from .names import AssigneeResponse, CategoryResponse
+
 Title = Annotated[str, Field(min_length=1, max_length=255)]
 PositiveId = Annotated[int, Field(gt=0)]
 Description = Annotated[str, Field(max_length=2000)]
-
-
-class InputModel(BaseModel):
-    """既存クライアントが送る未定義項目は保存対象に含めず無視する。"""
-
-    model_config = ConfigDict(extra="ignore")
-
-
-class OrmResponse(BaseModel):
-    """ORM属性から応答を組み立てる。書き込みではcommit前に検証を完了する。"""
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class NameCreate(InputModel):
-    """カテゴリ・担当者に共通の名前入力。前後空白を除いてから長さを検証する。"""
-
-    name: Name
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def strip_name(cls, value: Any) -> Any:
-        """空白だけの名前を空文字にし、min_lengthで拒否できるようにする。"""
-        return value.strip() if isinstance(value, str) else value
-
-
-class CategoryCreate(NameCreate):
-    """カテゴリ作成の入力。重複判定はDBの一意制約に従う。"""
-
-
-class AssigneeCreate(NameCreate):
-    """担当者作成の入力。重複判定はDBの一意制約に従う。"""
-
-
-class CategoryResponse(OrmResponse):
-    """カテゴリのIDと名前だけを外部へ返す。"""
-
-    id: int
-    name: str
-
-
-class AssigneeResponse(OrmResponse):
-    """担当者のIDと名前だけを外部へ返す。"""
-
-    id: int
-    name: str
 
 
 class TaskBase(InputModel):

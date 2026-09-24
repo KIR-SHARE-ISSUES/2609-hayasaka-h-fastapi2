@@ -7,8 +7,8 @@ ORMは、DBの行をPythonのオブジェクトとして扱う仕組み。
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
-from ..Model.errors import NotFoundError
-from ..Model.models import Task
+from ..errors import NotFoundError
+from ..Model import Task
 
 
 class TaskRepository:

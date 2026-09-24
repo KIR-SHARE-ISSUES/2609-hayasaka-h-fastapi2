@@ -9,8 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from ..Model.errors import DuplicateNameError
-from ..Model.models import Assignee, Category
+from ..errors import DuplicateNameError
+from ..Model import Assignee, Category
 
 NamedModel = TypeVar("NamedModel", Category, Assignee)
 

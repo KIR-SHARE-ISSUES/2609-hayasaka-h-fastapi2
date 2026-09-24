@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
-from ..Model.errors import ApplicationError, DuplicateNameError, NotFoundError
+from ..errors import ApplicationError, DuplicateNameError, NotFoundError
 
 logger = logging.getLogger(__name__)
 

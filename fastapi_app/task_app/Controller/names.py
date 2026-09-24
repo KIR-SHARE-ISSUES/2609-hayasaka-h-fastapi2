@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..DataAccessLayer.database import Database, execute_database_operation
 from ..DataAccessLayer.names import CategoryRepository, AssigneeRepository
-from ..Model.schemas import (
+from ..Schema.names import (
     CategoryCreate,
     CategoryResponse,
     AssigneeCreate,

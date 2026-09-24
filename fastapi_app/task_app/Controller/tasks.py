@@ -13,9 +13,9 @@ from sqlalchemy.orm import Session
 from ..DataAccessLayer.database import Database, execute_database_operation
 from ..DataAccessLayer.names import AssigneeRepository, CategoryRepository
 from ..DataAccessLayer.tasks import TaskRepository
-from ..Model.errors import NotFoundError
-from ..Model.models import Task
-from ..Model.schemas import TaskCreate, TaskResponse, TaskUpdate
+from ..errors import NotFoundError
+from ..Model import Task
+from ..Schema.tasks import TaskCreate, TaskResponse, TaskUpdate
 
 # URL内のIDは正の整数に限定し、DBに存在するかは各処理で確認する。
 TaskId = Annotated[int, Path(gt=0)]
